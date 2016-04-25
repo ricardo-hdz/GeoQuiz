@@ -65,8 +65,6 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy(Bundle) called");
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +80,7 @@ public class QuizActivity extends AppCompatActivity {
         updateQuestion();
 
         mTrueButton = (Button) findViewById(R.id.true_button);
+
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +113,7 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
-        int messageResId = 0;
+        int messageResId;
 
         if (userPressedTrue == answerTrue) {
             messageResId = R.string.correct_toast;
