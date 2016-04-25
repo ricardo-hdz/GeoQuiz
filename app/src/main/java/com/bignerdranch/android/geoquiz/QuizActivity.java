@@ -19,6 +19,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = QuizActivity.class.getSimpleName();
     private static final String KEY_INDEX = "index";
+    private static final String IS_CHEATER_STATUS = "CHEATER_STATUS";
     private static final int REQUEST_CODE_CHEAT = 0;
 
     private Question[] mQuestionBank = new Question[] {
@@ -31,12 +32,14 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
+    private int mCheatedOnIndex;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.i(TAG, "onSaveInstanceState");
         outState.putInt(KEY_INDEX, mCurrentIndex);
+        outState.putBoolean(IS_CHEATER_STATUS, mIsCheater);
     }
 
     @Override
@@ -93,6 +96,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX);
+            mIsCheater = savedInstanceState.getBoolean(IS_CHEATER_STATUS);
         }
 
         updateQuestion();
@@ -102,6 +106,7 @@ public class QuizActivity extends AppCompatActivity {
         mTrueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkIfCheated();
                 checkAnswer(true);
             }
         });
@@ -117,6 +122,9 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mIsCheater) {
+                    mCheatedOnIndex = mCurrentIndex;
+                }
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
                 mIsCheater = false;
                 updateQuestion();
@@ -132,6 +140,12 @@ public class QuizActivity extends AppCompatActivity {
                 startActivityForResult(i, REQUEST_CODE_CHEAT);
             }
         });
+    }
+
+    private void checkIfCheated() {
+        if (mCheatedOnIndex == mCheatedOnIndex) {
+            mIsCheater = true;
+        }
     }
 
     private void updateQuestion() {
